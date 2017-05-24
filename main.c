@@ -4,6 +4,9 @@
 #include "date.h"
 #include <stdlib.h>
 
+status_t validate_args(int argc, char *argv[], *config_t);
+
+
 int main(int argc, char * argv[]){
     status_t st;
     time_t machine_time;
