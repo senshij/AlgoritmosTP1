@@ -24,8 +24,9 @@ status_t    parse_line(struct tm* time_struct){
         field_time[FIELD_SPAN_TIME + 1] = '\0'; 
        if ((st  = _parse_field_time(field_time, time_struct)) != OK)
            return ERROR_INVALID_DATA;
+       return FOUND;
     }
-    return OK;
+    return NOT_FOUND;
 }
 
 status_t _parse_field_time(char field[], struct tm *time_struct){     

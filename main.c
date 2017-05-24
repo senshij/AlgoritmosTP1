@@ -22,19 +22,16 @@ int main(int argc, char * argv[]){
         return EXIT_FAILURE;
     }   
     time_struct = localtime(&machine_time);
-    while ((st = parse_line(gps_time)) =! EOF)
+    while ((st = parse_line(gps_time, &time_struct)) != END_OF_FILE)
     { 
         if (st == ERROR_READ_LINE)
             show_error_message(st);
-        if (st == FOUND){        {
-           parse_time (gps_time, time_struct);
+        if (st == FOUND){   
+           merge_time (gps_time, time_struct);
            print_time(time_struct, config.format);
         }
     }
     printf("%s\n",MSG_PROGRAM_END);
     return EXIT_SUCCESS;
 }
-/*recordar validar pasaje de */
-/*punteros                   */
-
 

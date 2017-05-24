@@ -1,5 +1,5 @@
-#include "config.h"
+#include <stdio.h>
 #include <time.h>
 
-status_t parse_time(struct tm, struct tm*);
+void merge_time (struct tm * gps_time, struct tm * time_struct);
 
