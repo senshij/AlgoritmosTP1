@@ -1,5 +1,5 @@
-#include <stdio.h>
+#include "config.h"
 #include <time.h>
 
-void    parse_time(char *, struct tm*);
+status_t parse_time(struct tm, struct tm*);
 
