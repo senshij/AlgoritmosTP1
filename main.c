@@ -5,12 +5,15 @@
 #include <stdlib.h>
 #include <string.h>
 #define MAX_STR 100
-#define NUMBER_ARGS 2
+#define NUMBER_ARGS 3
 #define FORMAT_FLAG_POSITION 1
+#define FORMAT_FLAG_SPAN 4
 #define FORMAT_FLAG "-fmt"
 #define FORMAT_TYPE_POSITION 2
 #define FORMAT_TYPE_GREGORIAN "AAAAMMDDHHmmSS"
 #define FORMAT_TYPE_JULIAN "AAAADDDHHmmSS"
+#define FORMAT_TYPE_GREGORIAN_SPAN 14
+#define FORMAT_TYPE_JULIAN_SPAN 13
 
 status_t validate_args(int argc, char *argv[], config_t *);
 extern config_t config;
@@ -45,14 +48,14 @@ status_t validate_args(int argc, char *argv[], config_t *config){
     if(argv == NULL || config == NULL)
 	return ERROR_NULL_POINTER;
     if(argc != NUMBER_ARGS)
+	return ERROR_INVALID_NUMBER_ARGS;
+    if(strncmp(argv[FORMAT_FLAG_POSITION], FORMAT_FLAG, FORMAT_FLAG_SPAN))
 	return ERROR_INVALID_ARGS;
-    if(!strcmp(argv[FORMAT_FLAG_POSITION], FORMAT_FLAG))
-	return ERROR_INVALID_ARGS;
-    if(!strcmp(argv[FORMAT_TYPE_POSITION], FORMAT_TYPE_GREGORIAN)){
+    if(!strncmp(argv[FORMAT_TYPE_POSITION], FORMAT_TYPE_GREGORIAN, FORMAT_TYPE_GREGORIAN_SPAN)){
 	(*config).format = GREGORIAN_FORMAT;
 	return OK;
     }
-    if(!strcmp(argv[FORMAT_TYPE_POSITION], FORMAT_TYPE_JULIAN)){
+    if(!strncmp(argv[FORMAT_TYPE_POSITION], FORMAT_TYPE_JULIAN, FORMAT_TYPE_JULIAN_SPAN)){
 	(*config).format = JULIAN_FORMAT;
 	return OK;
     }

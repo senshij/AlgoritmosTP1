@@ -2,6 +2,7 @@
 #include "input.h"
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 #define ID_MSG "$GPGGA"
 #define FIELD_SPAN_ID_MSG 6
@@ -20,7 +21,7 @@ status_t parse_line(struct tm *time_struct){
     if(time_struct == NULL)
         return ERROR_NULL_POINTER;
     if(fgets(line, MAX_LINE - 2 ,stdin) == NULL)
-        return ERROR_EOF;
+        return END_OF_FILE;
     if(!strncmp(line, ID_MSG, FIELD_SPAN_ID_MSG)){
         for(i = 0; i < FIELD_SPAN_TIME; i++){
             if (!isdigit(line[i + FIELD_POS_TIME]))
@@ -28,9 +29,9 @@ status_t parse_line(struct tm *time_struct){
             field_time[i] = line[i + FIELD_POS_TIME]; 
         }
         field_time[FIELD_SPAN_TIME + 1] = '\0'; 
-       if((st  = _parse_field_time(field_time, time_struct)) != OK)
-           return ERROR_INVALID_DATA;
-       return FOUND;
+        if((st  = _parse_field_time(field_time, time_struct)) != OK)
+            return ERROR_INVALID_DATA;
+        return FOUND;
     }
     return NOT_FOUND;
 }
@@ -45,11 +46,11 @@ status_t _parse_field_time(char field[], struct tm *time_struct){
         return ERROR_INVALID_DATA;
     (*time_struct).tm_hour = aux;
     aux = (value%10000)/100;
-    if(aux > 60)
+    if(aux > 59)
         return ERROR_INVALID_DATA;
     (*time_struct).tm_min = aux;
- aux = (value%100);
-    if(aux > 60)
+    aux = (value%100);
+    if(aux > 59)
         return ERROR_INVALID_DATA;
     (*time_struct).tm_sec = aux;
 
