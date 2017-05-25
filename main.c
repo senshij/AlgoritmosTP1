@@ -3,17 +3,25 @@
 #include "output.h"
 #include "date.h"
 #include <stdlib.h>
+#include <string.h>
+#define MAX_STR 100
+#define NUMBER_ARGS 2
+#define FORMAT_FLAG_POSITION 1
+#define FORMAT_FLAG "-fmt"
+#define FORMAT_TYPE_POSITION 2
+#define FORMAT_TYPE_GREGORIAN "AAAAMMDDHHmmSS"
+#define FORMAT_TYPE_JULIAN "AAAADDDHHmmSS"
 
-status_t validate_args(int argc, char *argv[], *config_t);
+status_t validate_args(int argc, char *argv[], config_t *);
+extern config_t config;
 
-
-int main(int argc, char * argv[]){
+int main(int argc, char *argv[]){
     status_t st;
     time_t machine_time;
-    struct tm time_struct;
-    char gps_time[MAX];
+    struct tm *time_struct;
+    struct tm gps_time;
 
-    if(st=(validate_args(argc,argv, &config)) != OK){
+    if((st=(validate_args(argc,argv, &config))) != OK){
         print_error_message(st);
         return EXIT_FAILURE;
     } 
@@ -22,19 +30,31 @@ int main(int argc, char * argv[]){
         return EXIT_FAILURE;
     }   
     time_struct = localtime(&machine_time);
-    while ((st = parse_line(gps_time)) =! EOF)
-    { 
+    while ((st = parse_line(&gps_time)) != END_OF_FILE){
         if (st == ERROR_READ_LINE)
-            show_error_message(st);
-        if (st == FOUND){        {
-           parse_time (gps_time, time_struct);
-           print_time(time_struct, config.format);
+            print_error_message(st);
+        if (st == FOUND){
+           merge_time(gps_time, time_struct);
+           print_time(*time_struct, config.format);
         }
     }
-    printf("%s\n",MSG_PROGRAM_END);
     return EXIT_SUCCESS;
 }
-/*recordar validar pasaje de */
-/*punteros                   */
 
-
+status_t validate_args(int argc, char *argv[], config_t *config){
+    if(argv == NULL || config == NULL)
+	return ERROR_NULL_POINTER;
+    if(argc != NUMBER_ARGS)
+	return ERROR_INVALID_ARGS;
+    if(!strcmp(argv[FORMAT_FLAG_POSITION], FORMAT_FLAG))
+	return ERROR_INVALID_ARGS;
+    if(!strcmp(argv[FORMAT_TYPE_POSITION], FORMAT_TYPE_GREGORIAN)){
+	(*config).format = GREGORIAN_FORMAT;
+	return OK;
+    }
+    if(!strcmp(argv[FORMAT_TYPE_POSITION], FORMAT_TYPE_JULIAN)){
+	(*config).format = JULIAN_FORMAT;
+	return OK;
+    }
+    return ERROR_INVALID_ARGS;
+}

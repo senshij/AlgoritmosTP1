@@ -1,6 +1,7 @@
+#include "config.h"
 #include "date.h"
 
-status_t parse_time(struct tm input_time, struct tm *actual_time){
+status_t merge_time(struct tm input_time, struct tm *actual_time){
     if(actual_time == NULL)
 	return ERROR_NULL_POINTER;
     (*actual_time).tm_hour = input_time.tm_hour;

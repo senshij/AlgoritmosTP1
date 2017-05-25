@@ -1,10 +1,11 @@
+#include "config.h"
 #include "output.h"
 #define MSG_ERROR_INVALID_DATA "El dato leído es inválido."
 #define MSG_ERROR_EOF "Fin de archivo."
 #define MSG_ERROR_INVALID_ARGS "Los argumentos ingresados son inválidos."
 #define MSG_ERROR_NULL_POINTER "Error del sistema."
 
-void print_time(stuct tm time, format_t format){
+void print_time(struct tm time, format_t format){
     switch(format){
         case GREGORIAN_FORMAT:
             printf("%i%i%i%i%i%i\n",\
