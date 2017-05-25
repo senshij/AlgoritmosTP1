@@ -12,8 +12,10 @@ typedef struct{
 typedef enum{
     OK,
     FOUND,
+    NOT_FOUND,
     END_OF_FILE,
     ERROR_INVALID_ARGS,
+    ERROR_INVALID_NUMBER_ARGS,
     ERROR_EOF,
     ERROR_READ_LINE,
     ERROR_INVALID_DATA,
